@@ -36,6 +36,8 @@ class LikeParser:
                 pass
 
         result = pd.DataFrame.from_dict(s)
+        result['bdate'] = pd.to_datetime(result['bdate'], errors = 'coerce', yearfirst = True)
+        result['bdate'] = result['bdate'].dt.year
         try:
             writer = pd.ExcelWriter('likers/{}.xlsx'.format(self.gid))
             result.to_excel(writer,'Sheet1')
@@ -46,7 +48,7 @@ class LikeParser:
 
 
 def main():
-    case = LikeParser(-1).usersParse()
+    case = LikeParser(-75617836).usersParse()
 
 
 if __name__ == '__main__':
