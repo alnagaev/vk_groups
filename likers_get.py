@@ -37,7 +37,7 @@ class LikeParser:
 
         result = pd.DataFrame.from_dict(s)
         try:
-            writer = pd.ExcelWriter('likers\{}.xlsx'.format(self.gid))
+            writer = pd.ExcelWriter('likers/{}.xlsx'.format(self.gid))
             result.to_excel(writer,'Sheet1')
             writer.save()
             print('Файл записан')
