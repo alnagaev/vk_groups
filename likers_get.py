@@ -6,10 +6,9 @@ from collections import defaultdict
 token = open('token.txt', 'r').read()
 
 
-class LikeParser:
+class ActiveUsers:
     def __init__(self, gid):
         self.gid = gid
-        self.usersParse()
 
     def postParser(self):
         r = requests.post('https://api.vk.com/method/execute.postsGet?id='+
@@ -21,7 +20,9 @@ class LikeParser:
         return (count, ids)
 
 
-    def usersParse(self):
+    # post_ids = postParser(self.gid)[1]
+
+    def LikersParser(self):
         self.ids = self.postParser()[1]
         s = defaultdict(list)
         for i in self.ids:
@@ -34,21 +35,41 @@ class LikeParser:
 
             except Exception as e:
                 pass
-
         result = pd.DataFrame.from_dict(s)
         result['bdate'] = pd.to_datetime(result['bdate'], errors = 'coerce', yearfirst = True)
         result['bdate'] = result['bdate'].dt.year
         try:
-            writer = pd.ExcelWriter('likers/{}.xlsx'.format(self.gid))
-            result.to_excel(writer,'Sheet1')
-            writer.save()
+            writer = result.to_csv('likers/{}.csv'.format(self.gid))
+            print('Файл записан')
+        except Exception as e:
+            print(str(e))
+
+
+    def RepostersPaser(self):
+        self.ids = self.postParser()[1]
+        s = defaultdict(list)
+        for i in self.ids:
+            try:
+                r = requests.post('https://api.vk.com/method/execute.reposters?id='+
+                          str(self.gid)+'&number='+str(i)+'&v='+'5.73'+
+                          '&access_token='+token).json()['response'][0]
+                for k,v in r.items():
+                    s[k].extend(v)
+
+            except Exception as e:
+                pass
+        result = pd.DataFrame.from_dict(s)
+        result['bdate'] = pd.to_datetime(result['bdate'], errors = 'coerce', yearfirst = True)
+        result['bdate'] = result['bdate'].dt.year
+        try:
+            writer = result.to_csv('reposters/{}.csv'.format(self.gid))
             print('Файл записан')
         except Exception as e:
             print(str(e))
 
 
 def main():
-    case = LikeParser(-75617836).usersParse()
+    case = ActiveUsers(-75617836).RepostersPaser()
 
 
 if __name__ == '__main__':
