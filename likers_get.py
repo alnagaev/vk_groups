@@ -21,7 +21,7 @@ class ActiveUsers:
 
 
     # post_ids = postParser(self.gid)[1]
-
+	@property
     def LikersParser(self):
         self.ids = self.postParser()[1]
         s = defaultdict(list)
@@ -38,13 +38,15 @@ class ActiveUsers:
         result = pd.DataFrame.from_dict(s)
         result['bdate'] = pd.to_datetime(result['bdate'], errors = 'coerce', yearfirst = True)
         result['bdate'] = result['bdate'].dt.year
+		return result
         try:
             writer = result.to_csv('likers/{}.csv'.format(self.gid))
             print('Файл записан')
         except Exception as e:
             print(str(e))
 
-
+	
+	@property
     def RepostersPaser(self):
         self.ids = self.postParser()[1]
         s = defaultdict(list)
@@ -61,11 +63,22 @@ class ActiveUsers:
         result = pd.DataFrame.from_dict(s)
         result['bdate'] = pd.to_datetime(result['bdate'], errors = 'coerce', yearfirst = True)
         result['bdate'] = result['bdate'].dt.year
-        try:
-            writer = result.to_csv('reposters/{}.csv'.format(self.gid))
-            print('Файл записан')
-        except Exception as e:
-            print(str(e))
+		return result 
+		
+		
+	def write_csv(self):
+		if __name__ == self.RepostersPaser:
+			try:
+				writer = self.RepostersPaser.to_csv('reposters/{}.csv'.format(self.gid))
+				print('Файл записан')
+			except Exception as e:
+				print(str(e))
+		if __name__ == self.LikersParser:
+			try:
+				writer = self.LikersParser.to_csv('likers/{}.csv'.format(self.gid))
+				print('Файл записан')
+			except Exception as e:
+				print(str(e))			
 
 
 def main():

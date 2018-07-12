@@ -9,9 +9,8 @@ token = open('token.txt', 'r').read()
 class PostParser:
     def __init__(self, owner_id):
         self.owner_id = owner_id
-        self.get_members_list_id()
 
-
+    @property
     def get_members_list_id(self):
         # creating defaultdict
         s = defaultdict(list)
@@ -31,14 +30,23 @@ class PostParser:
         s['dates'] = date
         df = pd.DataFrame.from_dict(s)
         df['gid'] = self.owner_id
-        self.df = df
+        return df
 
     def write_excel(self):
         #Функция для записи датафрейма в эксель
         try:
             writer = pd.ExcelWriter('posts/{}.xlsx'.format(self.owner_id))
-            self.df.to_excel(writer,'Sheet1')
+            self.get_members_list_id.to_excel(writer,'Sheet1')
             writer.save()
+            print('Файл записан')
+        except Exception as e:
+            print(str(e))
+
+            
+    def write_csv(self):
+        #Запись датафрейсма в csv формат
+        try:
+            writer = self.get_members_list_id.to_csv('posts/{}.csv'.format(self.owner_id))
             print('Файл записан')
         except Exception as e:
             print(str(e))
