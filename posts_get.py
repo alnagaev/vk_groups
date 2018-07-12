@@ -6,7 +6,7 @@ from collections import defaultdict
 
 token = open('token.txt', 'r').read()
 ids = pd.read_excel('groups_Ivan.xlsx')['Id'].tolist()
-ids = ['-'+str(x) for x in ids]
+ids_ = ['-'+str(x) for x in ids]
 
 class PostParser:
     def __init__(self, owner_id):
@@ -54,7 +54,7 @@ class PostParser:
             print(str(e)+' запись файла {} не удалась'.format(self.owner_id))
 
 def main():
-    PostParser(-23477308).write_excel()
+    PostParser().write_excel()
 
 
 if __name__ == '__main__':
