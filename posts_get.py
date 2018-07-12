@@ -2,7 +2,7 @@ import requests
 import datetime
 import pandas as pd
 from collections import defaultdict
-
+import time
 
 token = open('token.txt', 'r').read()
 ids = pd.read_excel('groups_Ivan.xlsx')['Id'].tolist()
@@ -54,7 +54,9 @@ class PostParser:
             print(str(e)+' запись файла {} не удалась'.format(self.owner_id))
 
 def main():
-    PostParser().write_excel()
+    for i in ids_:
+        PostParser(i).write_excel()
+        time.sleep(1)
 
 
 if __name__ == '__main__':

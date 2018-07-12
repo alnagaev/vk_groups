@@ -2,9 +2,15 @@ import requests
 import time
 import pandas as pd
 from collections import defaultdict
+import logging
 
 token = open('token.txt', 'r').read()
 
+logging.basicConfig(filename="logfile.log", level = logging.INFO,
+                    format = '%(levelname)s:%(message)s')
+
+ids = pd.read_excel('groups_Ivan.xlsx')['Id'].tolist()
+ids_ = ['-'+str(x) for x in ids]
 
 class ActiveUsers:
     def __init__(self, gid):
@@ -73,7 +79,7 @@ class ActiveUsers:
                                             yearfirst = True)
         result['bdate'] = result['bdate'].dt.year
         try:
-            result.to_csv('posts/{}.csv'.format(self.gid))
+            result.to_csv('likers/{}.csv'.format(self.gid))
             print('Файл {} записан'.format(self.gid))
         except Exception as e:
             print(str(e)+' запись файла {} не удалась'.format(self.gid))
@@ -96,7 +102,7 @@ class ActiveUsers:
         result['bdate'] = pd.to_datetime(result['bdate'], errors = 'coerce', yearfirst = True)
         result['bdate'] = result['bdate'].dt.year
         try:
-            result.to_csv('posts/{}.csv'.format(self.gid))
+            result.to_csv('reposters/{}.csv'.format(self.gid))
             print('Файл {} записан'.format(self.gid))
         except Exception as e:
             print(str(e)+' запись файла {} не удалась'.format(self.gid))
@@ -104,7 +110,11 @@ class ActiveUsers:
 
 
 def main():
-    case = ActiveUsers(75617836).all_users()
+    for i in ids_:
+        case = ActiveUsers(i).RepostersPaser()
+        time.sleep(1)
+
+
 
 
 if __name__ == '__main__':
