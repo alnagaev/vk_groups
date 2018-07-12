@@ -10,9 +10,14 @@ venv/
 # Ignore folder named 'likers'
 likers/
 
+# Ignore folder named 'posts'
+posts/
+
+# Ignore folder named 'all_users'
+all_users/
+
 # Ignore folder named 'reposters'
 reposters/
 
 # Ignore file named 'token.txt'
 token.txt
-

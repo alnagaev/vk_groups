@@ -5,6 +5,8 @@ from collections import defaultdict
 
 
 token = open('token.txt', 'r').read()
+ids = pd.read_excel('groups_Ivan.xlsx')['Id'].tolist()
+ids = ['-'+str(x) for x in ids]
 
 class PostParser:
     def __init__(self, owner_id):
@@ -38,22 +40,21 @@ class PostParser:
             writer = pd.ExcelWriter('posts/{}.xlsx'.format(self.owner_id))
             self.get_members_list_id.to_excel(writer,'Sheet1')
             writer.save()
-            print('Файл записан')
+            print('Файл {} записан'.format(self.owner_id))
         except Exception as e:
-            print(str(e))
+            print(str(e)+' запись файла {} не удалась'.format(self.owner_id))
 
-            
+
     def write_csv(self):
         #Запись датафрейсма в csv формат
         try:
             writer = self.get_members_list_id.to_csv('posts/{}.csv'.format(self.owner_id))
-            print('Файл записан')
+            print('Файл {} записан'.format(self.owner_id))
         except Exception as e:
-            print(str(e))
-
+            print(str(e)+' запись файла {} не удалась'.format(self.owner_id))
 
 def main():
-    case = PostParser(-75617836).write_excel()
+    PostParser(-23477308).write_excel()
 
 
 if __name__ == '__main__':
